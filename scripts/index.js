@@ -3,14 +3,14 @@ const COLS = 10;
 const ROWS = 20;
 const BLOCK_SIZE = 30;
 const COLOR_MAPPING = [
-  'red',
-  'orange',
-  'green',
-  'purple',
-  'blue',
-  'cyan',
-  'yellow',
-  'white',
+  "red",
+  "orange",
+  "green",
+  "purple",
+  "blue",
+  "cyan",
+  "yellow",
+  "white",
 ];
 
 const BRICK_LAYOUT = [
@@ -179,16 +179,16 @@ const BRICK_LAYOUT = [
 ];
 
 const KEY_CODES = {
-  LEFT: 'ArrowLeft',
-  RIGHT: 'ArrowRight',
-  UP: 'ArrowUp',
-  DOWN: 'ArrowDown',
+  LEFT: "ArrowLeft",
+  RIGHT: "ArrowRight",
+  UP: "ArrowUp",
+  DOWN: "ArrowDown",
 };
 
 const WHITE_COLOR_ID = 7;
 
-const canvas = document.getElementById('board');
-const ctx = canvas.getContext('2d');
+const canvas = document.getElementById("board");
+const ctx = canvas.getContext("2d");
 
 ctx.canvas.width = COLS * BLOCK_SIZE;
 ctx.canvas.height = ROWS * BLOCK_SIZE;
@@ -201,7 +201,7 @@ class Board {
     this.gameOver = false;
     this.isPlaying = false;
 
-    this.clearAudio = new Audio('../sounds/clear.wav');
+    this.clearAudio = new Audio("../sounds/clear.wav");
   }
 
   reset() {
@@ -225,7 +225,7 @@ class Board {
       BLOCK_SIZE,
       BLOCK_SIZE
     );
-    this.ctx.fillStyle = 'black';
+    this.ctx.fillStyle = "black";
     this.ctx.strokeRect(
       xAxis * BLOCK_SIZE,
       yAxis * BLOCK_SIZE,
@@ -243,31 +243,34 @@ class Board {
   }
 
   handleCompleteRows() {
-    const latestGrid = board.grid.filter((row) => { // row => []
-      return row.some(col => col === WHITE_COLOR_ID);
+    const latestGrid = board.grid.filter((row) => {
+      // row => []
+      return row.some((col) => col === WHITE_COLOR_ID);
     });
 
     const newScore = ROWS - latestGrid.length; // => newScore = tong cong hang da hoan thanh
-    const newRows = Array.from({ length: newScore }, () => Array(COLS).fill(WHITE_COLOR_ID));
+    const newRows = Array.from({ length: newScore }, () =>
+      Array(COLS).fill(WHITE_COLOR_ID)
+    );
 
     if (newScore) {
       board.grid = [...newRows, ...latestGrid];
       this.handleScore(newScore * 10);
 
       this.clearAudio.play();
-      console.log({latestGrid});
+      console.log({ latestGrid });
     }
   }
 
   handleScore(newScore) {
-    this.score+= newScore;
-    document.getElementById('score').innerHTML = this.score;
+    this.score += newScore;
+    document.getElementById("score").innerHTML = this.score;
   }
 
   handleGameOver() {
     this.gameOver = true;
     this.isPlaying = false;
-    alert('GAME OVER!!!');
+    alert("GAME OVER!!!");
   }
 }
 
@@ -289,7 +292,7 @@ class Brick {
       }
     }
   }
-
+  
   clear() {
     for (let row = 0; row < this.layout[this.activeIndex].length; row++) {
       for (let col = 0; col < this.layout[this.activeIndex][0].length; col++) {
@@ -379,7 +382,7 @@ class Brick {
             col + nextCol < 0 ||
             col + nextCol >= COLS ||
             row + nextRow >= ROWS ||
-            board.grid[row+nextRow][col+nextCol] !== WHITE_COLOR_ID
+            board.grid[row + nextRow][col + nextCol] !== WHITE_COLOR_ID
           )
             return true;
         }
@@ -403,24 +406,23 @@ class Brick {
       }
     }
 
-    
     board.handleCompleteRows();
     board.drawBoard();
   }
 }
 
 function generateNewBrick() {
-  brick = new Brick(Math.floor(Math.random() * 10) % BRICK_LAYOUT.length); // tao ra 1 id bat ki nam tu 0 -> 6
+  brick = new Brick(Math.floor(Math.random() * 6) ); // tao ra 1 id bat ki nam tu 0 -> 6
 }
 
 board = new Board(ctx);
 board.drawBoard();
 
-document.getElementById('play').addEventListener('click', () => {
+document.getElementById("play").addEventListener("click", () => {
   board.reset();
 
   board.isPlaying = true;
-  
+
   generateNewBrick();
 
   const refresh = setInterval(() => {
@@ -430,10 +432,9 @@ document.getElementById('play').addEventListener('click', () => {
       clearInterval(refresh);
     }
   }, 1000);
-})
+});
 
-
-document.addEventListener('keydown', (e) => {
+document.addEventListener("keydown", (e) => {
   if (!board.gameOver && board.isPlaying) {
     console.log({ e });
     switch (e.code) {
